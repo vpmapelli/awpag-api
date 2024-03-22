@@ -1,7 +1,9 @@
 package com.algaworks.awpag.api.controller;
 
+import com.algaworks.awpag.domain.exception.NegocioException;
 import com.algaworks.awpag.domain.model.Cliente;
 import com.algaworks.awpag.domain.repository.ClienteRepository;
+import com.algaworks.awpag.domain.service.CadastroClienteService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,11 +18,12 @@ import java.util.Optional;
 @RequestMapping("/clientes")
 public class ClienteController {
 
+    private final CadastroClienteService cadastroClienteService;
     private final ClienteRepository clienteRepository;
 
     @GetMapping
     public List<Cliente> listar(){
-        return clienteRepository.findByNomeContaining("João");
+        return clienteRepository.findAll();
     }
 
     @GetMapping("/{clienteId}")
@@ -37,7 +40,7 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Cliente adicionar(@Valid @RequestBody Cliente cliente){
-        return clienteRepository.save(cliente);
+        return cadastroClienteService.salvar(cliente);
     }
 
     @PutMapping("/{clienteId}")
@@ -48,7 +51,7 @@ public class ClienteController {
         }
 
         cliente.setId(clienteId);
-        cliente = clienteRepository.save(cliente);
+        cliente = cadastroClienteService.salvar(cliente);
 
         return ResponseEntity.ok(cliente);
     }
@@ -59,9 +62,14 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
 
-        clienteRepository.deleteById(clienteId);
+        cadastroClienteService.excluir(clienteId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler(NegocioException.class)
+    public ResponseEntity<String> capturar(NegocioException e){
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 
 }
