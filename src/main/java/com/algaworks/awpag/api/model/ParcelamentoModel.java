@@ -1,5 +1,6 @@
 package com.algaworks.awpag.api.model;
 
+import com.algaworks.awpag.domain.model.Cliente;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,8 @@ import java.time.OffsetDateTime;
 public class ParcelamentoModel {
 
     private Long id;
-    private String nomeCliente;
+    private ClienteResumoModel cliente;
+//    private String nomeCliente;
     private String descricao;
     private BigDecimal valorTotal;
     private Integer parcelas;
