@@ -1,0 +1,4 @@
+# Ignore everything. This folder is just to keep MySQL data using docker
+*
+
+!.gitignore

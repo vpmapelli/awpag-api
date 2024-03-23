@@ -1,0 +1,18 @@
+services:
+  db:
+    image: mysql:8.0.36
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    volumes:
+      - ./data:/var/lib/mysql
+  api:
+    container_name: awpag-api
+    build:
+      context: .
+    image: awpag-api-image
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
